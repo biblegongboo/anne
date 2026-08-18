@@ -1,0 +1,5 @@
+# anne Supabase
+
+Initial schema drafts live in `supabase/migrations/`.
+
+This repository keeps anne-specific data separate from the existing gongboo.org systems.
