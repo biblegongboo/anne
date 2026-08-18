@@ -19,3 +19,4 @@
 
 - Passage generation stays out of production for now.
 - Resume/checkpoint must remain deterministic.
+- First delivery milestone is a LICENSE-like content gate with sample/full access.

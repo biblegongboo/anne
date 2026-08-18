@@ -13,6 +13,8 @@ create table if not exists public.anne_content_sources (
     check (source_type in ('book', 'worksheet', 'import', 'other')),
   source_url text,
   license_label text,
+  sample_limit smallint not null default 20
+    check (sample_limit between 1 and 100),
   enabled boolean not null default true,
   display_order integer not null default 100,
   metadata jsonb not null default '{}'::jsonb,
