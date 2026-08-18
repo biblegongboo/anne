@@ -5,72 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>anne</title>
   <style>
-    :root { --bg:#f7fafc; --card:#fff; --line:#d7dde5; --text:#243042; --muted:#667085; --accent:#f5a623; }
+    :root { --bg:#f7fafc; --card:#fff; --line:#d9dee6; --text:#243042; --muted:#667085; --accent:#f5a623; }
     * { box-sizing:border-box; }
-    body { margin:0; font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background:var(--bg); color:var(--text); }
-    .wrap { max-width:1100px; margin:28px auto; padding:0 18px 40px; }
-    .hero, .panel, .card { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 4px 18px rgba(16,24,40,.05); }
-    .hero { padding:24px; margin-bottom:16px; }
-    .title { font-size:34px; font-weight:800; margin:0; }
-    .subtitle { margin:8px 0 0; color:var(--muted); }
-    .status { margin-top:14px; padding:10px 12px; background:#fff7e8; border-radius:12px; color:#7a4a00; font-size:14px; }
-    .grid { display:grid; grid-template-columns: 320px 1fr; gap:16px; }
-    .panel { padding:16px; }
-    .panel h2, .section-title { margin:0 0 12px; font-size:18px; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+    .page { max-width:1180px; margin:0 auto; padding:14px 14px 28px; }
+    .topbar, .modebar, .catalog-card, .panel, .question-card, .chunk-card { background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 4px 16px rgba(16,24,40,.05); }
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; margin-bottom:12px; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .brand-btn { border:none; background:#fff; border-radius:12px; padding:8px 12px; font-weight:800; cursor:pointer; box-shadow:0 1px 2px rgba(16,24,40,.06); }
+    .brand-btn span { color:var(--muted); }
+    .top-tools, .playback, .mode-group, .lang-group { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .tool-btn, .mode-btn, .nav-btn, .play-btn, .speed-select, .lang-select { border:1px solid var(--line); background:#fff; color:var(--text); border-radius:12px; min-height:36px; padding:0 12px; font:inherit; }
+    .tool-btn, .mode-btn, .nav-btn, .play-btn { cursor:pointer; }
+    .tool-btn.secondary, .nav-btn.secondary { background:#fafbfc; }
+    .tool-btn:disabled, .mode-btn:disabled, .play-btn:disabled, .nav-btn:disabled, .speed-select:disabled, .lang-select:disabled { opacity:.55; cursor:not-allowed; }
+    .public-pill { border:1px solid #f3d08c; background:#fff7e6; color:#8a4d00; font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px; }
+    .main-row { display:grid; grid-template-columns: 300px 1fr; gap:12px; margin-top:12px; }
+    .panel { padding:14px; }
+    .panel h2 { margin:0 0 12px; font-size:18px; letter-spacing:.2px; }
     .catalog-grid { display:grid; gap:10px; }
-    .catalog-card { width:100%; text-align:left; border:1px solid var(--line); background:#fff; border-radius:14px; padding:14px; cursor:pointer; }
-    .catalog-card.active { border-color:var(--accent); background:#fff8ec; }
+    .catalog-card { width:100%; text-align:left; padding:14px; cursor:pointer; }
+    .catalog-card.active { border-color:var(--accent); background:#fff8eb; }
     .catalog-title { font-weight:800; margin-bottom:4px; }
     .catalog-meta { color:var(--muted); font-size:12px; }
-    .reader-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
-    .btn { border:none; border-radius:12px; padding:10px 14px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
-    .btn:disabled { opacity:.45; cursor:not-allowed; }
+    .status { margin-top:12px; padding:10px 12px; background:#fff7e8; border-radius:12px; color:#7a4a00; font-size:14px; }
+    .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
     .counter { margin-left:auto; color:var(--muted); font-size:13px; }
-    .sentence-card { padding:18px; border:1px solid var(--line); border-radius:16px; background:#fff; margin-bottom:16px; }
+    .question-card { padding:16px; }
     .sentence-meta { color:var(--muted); font-size:12px; margin-bottom:10px; }
-    .sentence-en { font-size:20px; line-height:1.55; font-weight:700; margin-bottom:12px; }
-    .sentence-ko { font-size:18px; line-height:1.6; color:#1f2937; margin-bottom:14px; }
-    .question-block { border-top:1px solid var(--line); padding-top:14px; margin-top:14px; }
-    .question-en { font-weight:700; margin-bottom:6px; }
+    .sentence-en { font-size:20px; line-height:1.55; font-weight:800; margin-bottom:12px; }
+    .sentence-ko { font-size:18px; line-height:1.6; margin-bottom:14px; color:#1f2937; }
+    .question { border-top:1px solid var(--line); padding-top:14px; margin-top:14px; }
+    .question-en { font-weight:800; margin-bottom:4px; }
     .question-ko { color:var(--muted); margin-bottom:10px; }
     .choices { display:grid; gap:8px; }
-    .choice { border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fafbfc; }
+    .choice { border:1px solid var(--line); background:#fafbfc; border-radius:12px; padding:10px 12px; }
     .choice b { display:inline-block; width:20px; color:var(--accent); }
     .choice-en, .choice-ko { display:block; margin-left:24px; }
-    .answer-line, .explain { margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); }
-    .chunk-head { font-size:18px; font-weight:800; margin-bottom:12px; }
-    .chunk-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px; }
-    .chunk-card { border:1px solid var(--line); border-radius:14px; background:#fff; padding:12px; }
-    .chunk-no { width:24px; height:24px; border-radius:999px; background:#fff5de; color:#8a4d00; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; margin-bottom:8px; }
+    .answer, .explain { margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); }
+    .chunks { margin-top:14px; }
+    .chunk-head { font-size:18px; font-weight:800; margin-bottom:10px; }
+    .chunk-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:10px; }
+    .chunk-card { padding:12px; }
+    .chunk-no { width:24px; height:24px; border-radius:999px; background:#fff3d8; color:#8a4d00; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; margin-bottom:8px; }
     .chunk-en { font-weight:800; margin-bottom:4px; }
     .chunk-ko { color:var(--muted); font-size:13px; }
-    .empty { color:var(--muted); padding:12px 2px; }
-    @media (max-width: 900px) { .grid { grid-template-columns:1fr; } }
+    .empty { color:var(--muted); padding:12px 0; }
+    .learning-preview { display:grid; grid-template-columns: 1fr auto; gap:12px; margin-top:12px; }
+    .mini-card { padding:12px 14px; }
+    .mini-label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+    .mode-group { gap:6px; }
+    .mode-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:800; }
+    .lang-stack { display:grid; gap:6px; align-items:center; grid-auto-flow:column; }
+    .lang-label { color:var(--muted); font-size:12px; }
+    @media (max-width: 980px) {
+      .main-row, .learning-preview { grid-template-columns:1fr; }
+      .counter { margin-left:0; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <h1 class="title">anne</h1>
-      <p class="subtitle">Public easy reading and dyslexia-friendly learning for Anne sentence content.</p>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <button class="brand-btn" type="button">Anne <span>▾</span></button>
+        <div class="public-pill">PUBLIC</div>
+      </div>
+      <div class="top-tools" aria-label="Help and account">
+        <button class="tool-btn secondary" type="button" disabled title="Open Bible Atlas">🌐</button>
+        <button class="tool-btn secondary" type="button" disabled title="Open Bible People">👤</button>
+        <button class="tool-btn secondary" type="button" disabled title="Open user guide">?</button>
+      </div>
+    </header>
+
+    <section class="panel" style="margin-bottom:12px">
+      <div class="playback">
+        <button class="play-btn" type="button" id="playBtn">▶ Play</button>
+        <button class="play-btn" type="button" id="replayBtn">↻ Replay</button>
+        <button class="play-btn" type="button" id="stopBtn">■ Stop</button>
+        <select class="speed-select" id="speedSelect" aria-label="Reading speed">
+          <option value="0.75">0.75×</option>
+          <option value="1" selected>1.0×</option>
+          <option value="1.25">1.25×</option>
+        </select>
+        <button class="play-btn" type="button" id="autoBtn">AUTO</button>
+      </div>
+      <div class="learning-preview">
+        <div class="mode-group">
+          <button class="mode-btn" type="button" data-mode="Lrn">Lrn</button>
+          <button class="mode-btn active" type="button" data-mode="Std">Std</button>
+          <button class="mode-btn" type="button" data-mode="Exm">Exm</button>
+        </div>
+        <div class="lang-stack">
+          <div>
+            <div class="lang-label">First language</div>
+            <select class="lang-select" id="primaryLanguage">
+              <option value="ENG" selected>ENG</option>
+              <option value="KOR">KOR</option>
+              <option value="NONE">NONE</option>
+            </select>
+          </div>
+          <div>
+            <div class="lang-label">Second language</div>
+            <select class="lang-select" id="secondaryLanguage">
+              <option value="ENG">ENG</option>
+              <option value="KOR" selected>KOR</option>
+              <option value="NONE">NONE</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div id="status" class="status">Loading...</div>
     </section>
 
-    <div class="grid">
+    <div class="main-row">
       <aside class="panel">
-        <h2>Content catalog</h2>
+        <h2>AVAILABLE CONTENT</h2>
         <div id="catalog"></div>
       </aside>
 
       <main class="panel">
-        <div class="reader-toolbar">
-          <button class="btn" id="prevBtn">Prev</button>
-          <button class="btn" id="nextBtn">Next</button>
+        <div class="toolbar">
+          <button class="nav-btn" id="prevBtn" type="button">← Back</button>
+          <button class="nav-btn" id="nextBtn" type="button">Forward →</button>
           <div class="counter" id="counter">0 / 0</div>
         </div>
         <div id="reader"></div>
-        <div class="section-title">Chunk</div>
-        <div id="chunks"></div>
+        <section class="chunks">
+          <div class="chunk-head">CHUNK</div>
+          <div id="chunks"></div>
+        </section>
       </main>
     </div>
   </div>
