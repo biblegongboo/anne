@@ -10,7 +10,11 @@
     body { margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
     .page { max-width:1180px; margin:0 auto; padding:14px 14px 28px; }
     .topbar, .modebar, .catalog-card, .panel, .question-card, .chunk-card { background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 4px 16px rgba(16,24,40,.05); }
-    .topbar { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; margin-bottom:12px; }
+    .topbar { padding:12px 14px; margin-bottom:12px; }
+    .quiz-header { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; }
+    .sat-logo { display:grid; gap:8px; }
+    .bible-top-control-strip { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .bible-header-nav, .bible-top-actions, .top-tools, .playback, .mode-group, .lang-group { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .brand { display:flex; align-items:center; gap:10px; }
     .study-nav-host { min-width:0; }
     .study-nav-btn { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; height:36px; padding:0 12px; border:2px solid #ffd166; border-radius:10px; background:#ffb020; color:#102a43; box-shadow:0 3px 10px rgba(105,61,0,.28); font:850 15px/1 system-ui,sans-serif; cursor:pointer; }
@@ -77,14 +81,30 @@
 <body>
   <div class="page">
     <header class="topbar">
-      <div class="brand">
-        <div class="study-nav-host" id="studyNavHost"></div>
-        <div class="public-pill">PUBLIC</div>
-      </div>
-      <div class="top-tools" aria-label="Help and account">
-        <button class="tool-btn secondary" type="button" disabled title="Open Bible Atlas">🌐</button>
-        <button class="tool-btn secondary" type="button" disabled title="Open Bible People">👤</button>
-        <button class="tool-btn secondary" type="button" disabled title="Open user guide">?</button>
+      <div class="quiz-header">
+        <div class="sat-logo">
+          <div class="brand">
+            <div class="study-nav-host" id="studyNavHost"></div>
+          </div>
+          <div class="bible-top-control-strip">
+            <div class="bible-header-nav" aria-label="Bible reference tools">
+              <button class="tool-btn secondary" type="button" disabled title="Open Bible Atlas">🌐</button>
+              <button class="tool-btn secondary" type="button" disabled title="Open Bible People">👤</button>
+            </div>
+            <div class="bible-top-actions" aria-label="Help and account">
+              <button class="tool-btn secondary" type="button" disabled title="Open user guide">?</button>
+            </div>
+          </div>
+        </div>
+        <div class="lang-group">
+          <div>
+            <div class="lang-label">Language</div>
+            <select class="lang-select" id="languageSelector">
+              <option value="EN">English</option>
+              <option value="KO">한국어</option>
+            </select>
+          </div>
+        </div>
       </div>
     </header>
 
