@@ -1,11 +1,81 @@
 <!doctype html>
-<meta charset="UTF-8">
-<title>anne</title>
-<body style="font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;line-height:1.6">
-  <h1>anne</h1>
-  <p>Public easy reading and dyslexia-friendly learning for Anne sentence content.</p>
-  <h2>Content catalog</h2>
-  <div id="catalog">Loading...</div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>anne</title>
+  <style>
+    :root { --bg:#f7fafc; --card:#fff; --line:#d7dde5; --text:#243042; --muted:#667085; --accent:#f5a623; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background:var(--bg); color:var(--text); }
+    .wrap { max-width:1100px; margin:28px auto; padding:0 18px 40px; }
+    .hero, .panel, .card { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 4px 18px rgba(16,24,40,.05); }
+    .hero { padding:24px; margin-bottom:16px; }
+    .title { font-size:34px; font-weight:800; margin:0; }
+    .subtitle { margin:8px 0 0; color:var(--muted); }
+    .status { margin-top:14px; padding:10px 12px; background:#fff7e8; border-radius:12px; color:#7a4a00; font-size:14px; }
+    .grid { display:grid; grid-template-columns: 320px 1fr; gap:16px; }
+    .panel { padding:16px; }
+    .panel h2, .section-title { margin:0 0 12px; font-size:18px; }
+    .catalog-grid { display:grid; gap:10px; }
+    .catalog-card { width:100%; text-align:left; border:1px solid var(--line); background:#fff; border-radius:14px; padding:14px; cursor:pointer; }
+    .catalog-card.active { border-color:var(--accent); background:#fff8ec; }
+    .catalog-title { font-weight:800; margin-bottom:4px; }
+    .catalog-meta { color:var(--muted); font-size:12px; }
+    .reader-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .btn { border:none; border-radius:12px; padding:10px 14px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
+    .btn:disabled { opacity:.45; cursor:not-allowed; }
+    .counter { margin-left:auto; color:var(--muted); font-size:13px; }
+    .sentence-card { padding:18px; border:1px solid var(--line); border-radius:16px; background:#fff; margin-bottom:16px; }
+    .sentence-meta { color:var(--muted); font-size:12px; margin-bottom:10px; }
+    .sentence-en { font-size:20px; line-height:1.55; font-weight:700; margin-bottom:12px; }
+    .sentence-ko { font-size:18px; line-height:1.6; color:#1f2937; margin-bottom:14px; }
+    .question-block { border-top:1px solid var(--line); padding-top:14px; margin-top:14px; }
+    .question-en { font-weight:700; margin-bottom:6px; }
+    .question-ko { color:var(--muted); margin-bottom:10px; }
+    .choices { display:grid; gap:8px; }
+    .choice { border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fafbfc; }
+    .choice b { display:inline-block; width:20px; color:var(--accent); }
+    .choice-en, .choice-ko { display:block; margin-left:24px; }
+    .answer-line, .explain { margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); }
+    .chunk-head { font-size:18px; font-weight:800; margin-bottom:12px; }
+    .chunk-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px; }
+    .chunk-card { border:1px solid var(--line); border-radius:14px; background:#fff; padding:12px; }
+    .chunk-no { width:24px; height:24px; border-radius:999px; background:#fff5de; color:#8a4d00; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; margin-bottom:8px; }
+    .chunk-en { font-weight:800; margin-bottom:4px; }
+    .chunk-ko { color:var(--muted); font-size:13px; }
+    .empty { color:var(--muted); padding:12px 2px; }
+    @media (max-width: 900px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 class="title">anne</h1>
+      <p class="subtitle">Public easy reading and dyslexia-friendly learning for Anne sentence content.</p>
+      <div id="status" class="status">Loading...</div>
+    </section>
+
+    <div class="grid">
+      <aside class="panel">
+        <h2>Content catalog</h2>
+        <div id="catalog"></div>
+      </aside>
+
+      <main class="panel">
+        <div class="reader-toolbar">
+          <button class="btn" id="prevBtn">Prev</button>
+          <button class="btn" id="nextBtn">Next</button>
+          <div class="counter" id="counter">0 / 0</div>
+        </div>
+        <div id="reader"></div>
+        <div class="section-title">Chunk</div>
+        <div id="chunks"></div>
+      </main>
+    </div>
+  </div>
+
   <script src="./supabase-config.js"></script>
   <script src="./main.js"></script>
 </body>
+</html>
