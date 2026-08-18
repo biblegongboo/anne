@@ -80,6 +80,11 @@
 
   const $ = (s) => document.querySelector(s);
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const SYSTEMS = [
+    { id: "BIBLE", name: "Bible", url: "https://biblegongboo.github.io/bible/supabase/app/" },
+    { id: "LICENSE", name: "License", url: "https://biblegongboo.github.io/license/app/" },
+    { id: "ANNE", name: "Anne", url: "https://biblegongboo.github.io/anne/supabase/app/" },
+  ];
 
   const state = {
     sources: [],
@@ -91,6 +96,7 @@
     speed: 1,
     speechId: 0,
     selectedAnswer: 0,
+    currentSystem: "ANNE",
   };
 
   function save() {
@@ -103,6 +109,13 @@
     }));
   }
 
+  function systemFromPath() {
+    const path = String(location.pathname || "").toLowerCase();
+    if (path.indexOf("/license/") >= 0) return "LICENSE";
+    if (path.indexOf("/bible/") >= 0) return "BIBLE";
+    return "ANNE";
+  }
+
   function load() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
@@ -113,6 +126,30 @@
 
   function setStatus(text) {
     $("#status").textContent = text;
+  }
+
+  function renderSystemButton() {
+    const host = $("#studyNavHost");
+    const current = SYSTEMS.find((x) => x.id === state.currentSystem) || SYSTEMS[2];
+    host.innerHTML = `<button class="study-nav-btn" type="button" id="studyNavBtn"><span class="study-nav-label">${esc(current.name)}</span><span>▾</span></button>`;
+    $("#studyNavBtn").addEventListener("click", () => {
+      $("#studyBackdrop").hidden = false;
+      $("#studyPath").textContent = "Select Study";
+      const list = $("#studyList");
+      list.innerHTML = SYSTEMS.map((item) => `<button class="study-item" type="button" data-system="${esc(item.id)}"><span>${esc(item.name)}</span><span></span></button>`).join("");
+      list.querySelectorAll("[data-system]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const sys = SYSTEMS.find((x) => x.id === btn.getAttribute("data-system"));
+          if (!sys) return;
+          localStorage.setItem("gongboo_last_system_v1", JSON.stringify({ id: sys.id, name: sys.name }));
+          if (sys.id === "ANNE") {
+            $("#studyBackdrop").hidden = true;
+            return;
+          }
+          location.href = sys.url;
+        });
+      });
+    });
   }
 
   function asRows(value) {
@@ -337,6 +374,12 @@
     state.mode = saved?.mode || "Std";
     state.auto = !!saved?.auto;
     state.speed = Number(saved?.speed || 1);
+    state.currentSystem = systemFromPath();
+    renderSystemButton();
+    $("#studyBackdrop").querySelector("[data-back]").addEventListener("click", () => { $("#studyBackdrop").hidden = true; });
+    $("#studyBackdrop").querySelector("[data-close]").addEventListener("click", () => { $("#studyBackdrop").hidden = true; });
+    $("#studyBackdrop").addEventListener("click", (event) => { if (event.target === $("#studyBackdrop")) $("#studyBackdrop").hidden = true; });
+
     if (!cfg.url || !cfg.publishableKey || !cfg.functionName) {
       state.sources = demo.sources;
       state.sourceId = demo.sources[0].source_id;
