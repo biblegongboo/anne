@@ -39,8 +39,7 @@
           "</strong> " +
           "(" +
           String(source.source_id || "") +
-          ", sample " +
-          String(source.sample_limit || 20) +
+          ", public" +
           ")" +
           "</li>"
         );
